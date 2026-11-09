@@ -516,21 +516,6 @@ function on_level_command(msg)
     return true
 end
 
-function on_jump_leniency_command(msg)
-    local num = tonumber(msg)
-    if not network_is_server and not network_is_moderator() then
-        djui_chat_message_create("\\#ffa0a0\\[Arena] You need to be a moderator to use this command.")
-        return true
-    elseif num == nil then
-        djui_chat_message_create("\\#ffa0a0\\[Arena] Invalid number!")
-        return true
-    else
-        gGlobalSyncTable.jumpLeniency = num
-        djui_chat_message_create("[Arena] The number of jump leniency frames has been set to " .. num)
-        return true
-    end
-end
-
 local function on_arena_command(msg)
     local args = split(msg)
     if args[1] == "gamemode" then
@@ -541,8 +526,6 @@ local function on_arena_command(msg)
             name = name .. " " .. args[3]
         end
         return on_level_command(name or "")
-    elseif args[1] == "jump-leniency" then
-        return on_jump_leniency_command(args[2] or "")
     end
 
     djui_chat_message_create("/arena \\#00ffff\\[gamemode|level|jump-leniency]")
