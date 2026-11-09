@@ -212,11 +212,12 @@ function mario_bobomb_use(m)
     local e = gMarioStateExtras[m.playerIndex]
     local s = gPlayerSyncTable[m.playerIndex]
 
-    spawn_sync_object(id_bhvArenaBobomb, E_MODEL_BLACK_BOBOMB, m.pos.x, m.pos.y + 50, m.pos.z,
+    spawn_sync_object(id_bhvArenaBobomb, E_MODEL_BLACK_BOBOMB, m.pos.x, m.pos.y + 25, m.pos.z,
         function (obj)
             obj.oArenaBobombGlobalOwner = np.globalIndex
             obj.oMoveAngleYaw = m.faceAngle.y
-            obj.oForwardVel = m.forwardVel + 50
+            obj.oForwardVel = m.forwardVel + 18
+            obj.oVelY = m.vel.y * 1.8
         end)
 
     if (m.action & ACT_FLAG_INVULNERABLE) ~= 0 or (m.action & ACT_FLAG_INTANGIBLE) ~= 0 then
@@ -228,7 +229,7 @@ function mario_bobomb_use(m)
     elseif (m.action & ACT_FLAG_MOVING) ~= 0 then
         set_mario_action(m, ACT_MOVE_PUNCHING, 0)
     elseif (m.action & ACT_FLAG_AIR) ~= 0 then
-        set_mario_action(m, ACT_DIVE, 0)
+        set_mario_action(m, ACT_JUMP_KICK, 0)
     elseif (m.action & ACT_FLAG_STATIONARY) ~= 0 then
         set_mario_action(m, ACT_PUNCHING, 0)
     end
