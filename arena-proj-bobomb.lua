@@ -12,7 +12,7 @@ function bhv_arena_bobomb_init(obj)
     obj.oVelZ = coss(obj.oMoveAngleYaw) * obj.oForwardVel
     obj.oAnimations = gObjectAnimations.bobomb_seg8_anims_0802396C
     cur_obj_init_animation(1)
-    network_init_object(obj, false, nil)
+    network_init_object(obj, false, {})
 end
 
 function bhv_arena_bobomb_intersects_player(obj, m, pos, radius)
