@@ -234,6 +234,7 @@ function render_hud_icon(obj, hudIcon)
 end
 
 function on_hud_render()
+    hud_hide()
     -- set resolution and font
     djui_hud_set_resolution(RESOLUTION_N64)
     djui_hud_set_font(FONT_NORMAL)
@@ -265,5 +266,4 @@ function on_hud_render()
     end
 end
 
-hud_hide()
 hook_event(HOOK_ON_HUD_RENDER, on_hud_render)

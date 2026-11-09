@@ -433,7 +433,7 @@ function mario_update(m)
     end
 
     -- clear invincibilities
-    m.invincTimer = 0
+    m.invincTimer = math.min(m.invincTimer, 5)
     if m.knockbackTimer > 5 then
         m.knockbackTimer = 5
     end
@@ -453,6 +453,9 @@ function mario_update(m)
         network_player_set_override_palette_color(np, SKIN, network_player_get_palette_color(np, SKIN))
         network_player_set_override_palette_color(np, CAP, { r = 40, g = 10, b = 10 })
         network_player_set_override_palette_color(np, EMBLEM, network_player_get_palette_color(np, EMBLEM))
+        if charSelect then
+            charSelect.restrict_palettes(true)
+        end
     elseif s.team == 2 then
         network_player_set_override_palette_color(np, PANTS, { r = 63, g = 63, b = 255 })
         network_player_set_override_palette_color(np, SHIRT, { r = 10, g = 10, b = 40 })
@@ -462,8 +465,14 @@ function mario_update(m)
         network_player_set_override_palette_color(np, SKIN, network_player_get_palette_color(np, SKIN))
         network_player_set_override_palette_color(np, CAP, { r = 10, g = 10, b = 40 })
         network_player_set_override_palette_color(np, EMBLEM, network_player_get_palette_color(np, EMBLEM))
+        if charSelect then
+            charSelect.restrict_palettes(true)
+        end
     else
         network_player_reset_override_palette(np)
+        if charSelect then
+            charSelect.restrict_palettes(false)
+        end
     end
 
     -- set metal
