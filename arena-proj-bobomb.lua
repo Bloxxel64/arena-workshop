@@ -12,11 +12,7 @@ function bhv_arena_bobomb_init(obj)
     obj.oGravity = 5
     obj.oAnimations = gObjectAnimations.bobomb_seg8_anims_0802396C
     cur_obj_init_animation(1)
-<<<<<<< Updated upstream
-    network_init_object(obj, false, nil)
-=======
     network_init_object(obj, true, {})
->>>>>>> Stashed changes
 end
 
 function bhv_arena_bobomb_intersects_player(obj, m, pos, radius)
