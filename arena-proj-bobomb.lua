@@ -7,10 +7,11 @@ function bhv_arena_bobomb_init(obj)
     obj.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE | OBJ_FLAG_MOVE_XZ_USING_FVEL | OBJ_FLAG_SET_FACE_YAW_TO_MOVE_YAW
     obj_scale(obj, 0.75)
     cur_obj_play_sound_2(SOUND_AIR_BOBOMB_LIT_FUSE)
-    obj.oFriction = 0.92
+    obj.oFriction = 1
     obj.oBounciness = 1
-    obj.oGravity = 5
+    obj.oGravity = 3
     obj.oAnimations = gObjectAnimations.bobomb_seg8_anims_0802396C
+
     cur_obj_init_animation(1)
     network_init_object(obj, true, {})
 end
@@ -22,7 +23,7 @@ function bhv_arena_bobomb_intersects_player(obj, m, pos, radius)
         cm = lag_compensation_get_local_state(ownerNp)
     end
 
-    local mPos1 = { x = cm.pos.x, y = cm.pos.y + 50,  z = cm.pos.z }
+    local mPos1 = { x = cm.pos.x, y = cm.pos.y + 50, z = cm.pos.z }
     local mPos2 = { x = cm.pos.x, y = cm.pos.y + 150, z = cm.pos.z }
     local ret = (vec3f_dist(pos, mPos1) < radius or vec3f_dist(pos, mPos2) < radius)
 
@@ -44,7 +45,8 @@ function bhv_arena_bobomb_expode(obj, directHitLocal)
     local np = gNetworkPlayers[0]
     local e = gMarioStateExtras[0]
     local a = { x = obj.oPosX, y = obj.oPosY, z = obj.oPosZ }
-    local validAttack = global_index_hurts_mario_state(obj.oArenaBobombGlobalOwner, m) or np.globalIndex == obj.oArenaBobombGlobalOwner
+    local validAttack = global_index_hurts_mario_state(obj.oArenaBobombGlobalOwner, m) or
+    np.globalIndex == obj.oArenaBobombGlobalOwner
     local radius = 500
     if np.globalIndex == obj.oArenaBobombGlobalOwner then radius = 300 end
     if validAttack and bhv_arena_bobomb_intersects_player(obj, m, a, radius) and mario_health_float(m) > 0 then
@@ -81,13 +83,12 @@ function bhv_arena_bobomb_expode(obj, directHitLocal)
         m.vel.z = vel.z
         m.forwardVel = 0
         m.faceAngle.y = atan2s(vel.z, vel.x) + 0x8000
-
     end
 end
 
 function bhv_arena_bobomb_thrown_loop(obj)
-    local m = gMarioStates[0]
-    local pos   = { x = obj.oPosX, y = obj.oPosY, z = obj.oPosZ }
+    local m      = gMarioStates[0]
+    local pos    = { x = obj.oPosX, y = obj.oPosY, z = obj.oPosZ }
     local radius = 30
 
     for i = 0, MAX_PLAYERS - 1 do
@@ -102,12 +103,25 @@ function bhv_arena_bobomb_thrown_loop(obj)
 
     spawn_mist_advanced(obj, 2, 3, 1, 70)
 
-    if obj.oTimer > 60 then
+    if obj.oTimer > 30 * 5 then
         bhv_arena_bobomb_expode(obj, false)
         return
     end
-    obj_bounce_off_walls_edges_objects()
-    object_step_without_floor_orient()
+
+    obj.oForwardVel = clampf(obj.oForwardVel, 0, 30)
+
+    
+    local step = object_step_without_floor_orient()
+    if (step & OBJ_COL_FLAG_HIT_WALL) ~= 0 then
+        --s16 wallAngle = atan2s(m->wallNormal[2], m->wallNormal[0]);
+        --m->faceAngle[1] = wallAngle - (s16)(m->faceAngle[1] - wallAngle);
+        obj.oMoveAngleYaw = obj.oWallAngle - (obj.oMoveAngleYaw - obj.oWallAngle)
+    end
+
+    obj.hitboxRadius = 100
+    obj.hitboxHeight = 100
+
+
 end
 
 function bhv_arena_bobomb_explode_loop(obj)

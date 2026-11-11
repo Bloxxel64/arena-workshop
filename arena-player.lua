@@ -216,8 +216,8 @@ function mario_bobomb_use(m)
         function (obj)
             obj.oArenaBobombGlobalOwner = np.globalIndex
             obj.oMoveAngleYaw = m.faceAngle.y
-            obj.oForwardVel = m.forwardVel + 18
-            obj.oVelY = m.vel.y * 1.8
+            obj.oForwardVel = (m.forwardVel + 18)
+            obj.oVelY = 4
         end)
 
     if (m.action & ACT_FLAG_INVULNERABLE) ~= 0 or (m.action & ACT_FLAG_INTANGIBLE) ~= 0 then
